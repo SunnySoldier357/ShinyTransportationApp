@@ -9,7 +9,47 @@
   </head>
 
   <body>
-    
+    <h1>View Routes</h1>
+
+    <h3>Find Routes Nearest You</h3>
+
+    <p>
+      <label>Latitude:</label>
+      <input name="lat"
+             type="number"
+             min="-90"
+             max="90"
+             step="any"/>
+    </p>
+
+    <p>
+      <label>Longitude:</label>
+      <input name="lon"
+             type="number"
+             min="-180"
+             max="180"
+             step="any"/>
+    </p>
+
+    <p>
+      <label>Search Radius (m):</label>
+      <input name="radius"
+             type="number"
+             value="100"/>
+    </p>
+
+    <p>
+      <label>Route:</label>
+      <select name="routes"></select>
+    </p>
+
+    <h3>Map of Route:</h3>
+    <div id="map"
+         class="shiny-leaflet-output"></div>
+
+    <h3>List of Stops:</h3>
+    <div id="table"
+         class="shiny-table-output"></div>
   </body>
 
 </html>
