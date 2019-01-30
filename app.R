@@ -1,4 +1,5 @@
 library(shiny)
+library(DT)
 
 # input$lat
 # input$lon
@@ -7,12 +8,14 @@ library(shiny)
 # output#map
 # output#table
 
-routes <- readcsv()
-stops <- readcsv()
+routes <- read.csv("data/routes.csv")
+stops <- read.csv("data/stops.csv")
 
 server <- function(input, output)
 {
-    output$
+    
+    # Dynamically update the selectInput based on routes
+    # Based on route chosen show table
 }
 
 shinyApp(ui = htmlTemplate("www/index.html"), server)
