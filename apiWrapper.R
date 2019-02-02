@@ -4,13 +4,23 @@ library(jsonlite)
 url <- "http://api.pugetsound.onebusaway.org/api/where/"
 apiKey <- "3347298f-ecf4-45a4-98fe-5aff06696742"
 
+#* Gets JSON file from the URL above appended with the path specified and returns
+#* a JSON object
+getJsonFromURL = function(path)
+{
+    result <- GET(paste(url, path, sep = ""))
+
+    # Converts from binary to unicode and then to an object based on json structure
+    fromJSON(rawToChar(result$content))
+}
+
 apiWrapper <- setRefClass(
     "apiWrapper",
     fields = list(),
     methods = list(
 
-        # Search radius is optional
         #* Returns a list of routes
+        # Search radius is optional
         getRoutesForLocation = function(lat, lon, radius)
         {
             path <- paste("routes-for-location.json?key=", apiKey,
@@ -23,13 +33,19 @@ apiWrapper <- setRefClass(
                              "&radius=", radius,
                              sep = "")
             }
-
-            result <- GET(paste(url, path, sep = ""))
-
-            # Converts from binary to unicode and then to an object based on json structure
-            json <- fromJSON(rawToChar(result$content))
             
-            json$data$list
+            getJsonFromURL(path)$data$list
+        },
+
+        #* Returns a list of stops for a specified route
+        getStopsForRoute = function(routeID)
+        {
+            path <- paste("stops-for-route/", routeID, ".json",
+                          "?key=", apiKey,
+                          "&version=", 2,
+                          sep = "")
+
+            getJsonFromURL(path)$data$references$stops
         }
     )
 )
