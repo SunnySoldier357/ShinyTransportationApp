@@ -40,7 +40,7 @@ server <- function(input, output, session)
     
     output$map <- renderLeaflet(
     {
-        leaflet(stops) %>% addCircles()
+        leaflet(stops) %>% addCircles() %>% addTiles()
     })
 }
 
