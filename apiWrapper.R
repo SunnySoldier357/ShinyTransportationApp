@@ -14,6 +14,7 @@ getJsonFromURL = function(path)
     fromJSON(rawToChar(result$content))
 }
 
+#* A class that gets data from the API and return it in lists
 apiWrapper <- setRefClass(
     "apiWrapper",
     fields = list(),
