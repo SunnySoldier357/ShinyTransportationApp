@@ -3,7 +3,7 @@ library(dplyr)
 library(DT)
 library(leaflet)
 
-source("apiWrapper.R")
+source("../Models/apiWrapper.R")
 
 wrapper <- apiWrapper()
 
@@ -14,35 +14,19 @@ wrapper <- apiWrapper()
 # output#map
 # output#table
 
-ui <- fluidPage(
-    sidebarLayout(
-        sidebarPanel(),
-        
-        mainPanel(
-            DT::dataTableOutput(outputId = "table"),
-            leafletOutput("map")
-        )
-    )
-)
-
-server <- function(input, output, session)
+function(input, output, session)
 {
-    
     # Dynamically update the selectInput based on routes
-
     stops <- wrapper$getStopsForRoute("1_100091")
-   
+
     # Based on route chosen show table
     output$table <- DT::renderDataTable(
     {
         DT::datatable(data = stops)
     })
-    
+
     output$map <- renderLeaflet(
     {
         leaflet(stops) %>% addCircles() %>% addTiles()
     })
 }
-
-# shinyApp(ui = htmlTemplate("www/index.html"), server)
-shinyApp(ui, server)
