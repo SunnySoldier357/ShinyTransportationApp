@@ -6,9 +6,9 @@ apiKey <- "3347298f-ecf4-45a4-98fe-5aff06696742"
 
 #* Gets JSON file from the URL above appended with the path specified and returns
 #* a JSON object
-getJsonFromURL = function(path)
+getJsonFromURL <- function(path)
 {
-    result <- GET(paste(url, path, sep = ""))
+    result <- GET(paste(url, path, sep = "", collapse = ""))
 
     # Converts from binary to unicode and then to an object based on json structure
     fromJSON(rawToChar(result$content))
@@ -47,6 +47,17 @@ apiWrapper <- setRefClass(
                           sep = "")
 
             getJsonFromURL(path)$data$references$stops
+        },
+
+        #* Returns a list of polylines for a specified route
+        getPolylinesForRoute = function(routeID)
+        {
+            path <- paste("stops-for-route/", routeID, ".json",
+                          "?key=", apiKey,
+                          "&version=", 2,
+                          sep = "")
+
+            getJsonFromURL(path)$data$entry$polylines
         }
     )
 )
