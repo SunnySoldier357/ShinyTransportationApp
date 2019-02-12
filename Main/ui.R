@@ -3,6 +3,11 @@ library(DT)
 library(leaflet)
 
 htmlTemplate("template.html",
-    table = DT::dataTableOutput(outputId = "table"),
-    map = leafletOutput(outputId = "map")
+    startingPoint = textInput(inputId = "startingPoint",
+                              label = "Starting Location:"),
+    destination = textInput(inputId = "destination",
+                            label = "End Location:"),
+    map = leafletOutput(outputId = "map"),
+    summary = htmlOutput(outputId = "summary"),
+    description = DT::dataTableOutput(outputId = "table")
 )
