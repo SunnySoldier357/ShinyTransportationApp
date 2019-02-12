@@ -15,6 +15,17 @@ wrapper <- apiWrapper()
 # output#map
 # output#table
 
+getPolylinesFromDF <- function(dataFrame)
+{
+    polylines <- select(polylines, "points")
+
+    polylinesList <- as.list(polylines)
+    polylinesList <- polylinesList$points
+
+    allPolylines <- decode(polylinesList)
+    allPolylines <- bind_rows(allPolylines)
+}
+
 function(input, output, session)
 {
     # Dynamically update the selectInput based on routes
@@ -37,9 +48,9 @@ function(input, output, session)
 
     output$map <- renderLeaflet(
     {
-        leaflet(stops) %>% 
-            addCircles() %>% 
-            addTiles() %>% 
-            addPolylines(lat = ~lat, lng = ~lon, data = polylinesDF)
+        leaflet(stops) %>%
+            addCircles() %>%
+            addTiles() %>%
+            addPolylines(lat = ~lat, lng = ~lon, data = getPolylinesFromDF(wrapper$getPolylinesForRoute("1_100091")))
     })
 }
