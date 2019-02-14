@@ -8,12 +8,14 @@
     {{ bootstrapLib() }}
 
     <link rel="stylesheet"
-          href="../www/styles.css" />
+          href="styles.css" />
   </head>
 
   <body>
-    {{ startingPoint }}
-    {{ destination }}
+    <div class="horizontal"> {{ startingPoint }} </div>
+    <div class="horizontal"> {{ destination }} </div>
+    
+    {{ goButton }}
 
     {{ map }}
 
