@@ -1,0 +1,15 @@
+/* Probably optional */
+.shiny-leaflet-output {
+    height: 100%;
+    width: 100%;
+}
+
+.horizontal label {
+    display: inline-block;
+    width: auto;
+}
+
+.horizontal input {
+    display: inline-block;
+    width: 500px;
+}
