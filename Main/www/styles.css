@@ -4,12 +4,6 @@
     width: 100%;
 }
 
-.horizontal label {
-    display: inline-block;
+.horizontal .shiny-input-container {
     width: auto;
-}
-
-.horizontal input {
-    display: inline-block;
-    width: 500px;
 }
