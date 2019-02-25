@@ -20,6 +20,17 @@ apiWrapper <- setRefClass(
     fields = list(),
     methods = list(
 
+        #* Returns a list of polylines for a specified route
+        getPolylinesForRoute = function(routeID)
+        {
+            path <- paste("stops-for-route/", routeID, ".json",
+                          "?key=", apiKey,
+                          "&version=", 2,
+                          sep = "")
+
+            getJsonFromURL(path)$data$entry$polylines
+        },
+
         #* Returns a list of routes
         # Search radius is optional
         getRoutesForLocation = function(lat, lon, radius)
@@ -34,6 +45,28 @@ apiWrapper <- setRefClass(
                              "&radius=", radius,
                              sep = "")
             }
+
+            # TODO: If nothing returns, increase search radius
+            
+            getJsonFromURL(path)$data$list
+        },
+
+        #* Returns a list of stops
+        # Search radius is optional
+        getStopsForLocation <- function(lat, lon, radius)
+        {
+            path <- paste("stops-for-location.json?key=", apiKey,
+                          "&lat=", lat,
+                          "&lon=", lon,
+                          sep = "")
+            if (isTRUE(radius > 0))
+            {
+               path <- paste(path,
+                             "&radius=", radius,
+                             sep = "")
+            }
+
+            # TODO: If nothing returns, increase search radius
             
             getJsonFromURL(path)$data$list
         },
@@ -47,17 +80,6 @@ apiWrapper <- setRefClass(
                           sep = "")
 
             getJsonFromURL(path)$data$references$stops
-        },
-
-        #* Returns a list of polylines for a specified route
-        getPolylinesForRoute = function(routeID)
-        {
-            path <- paste("stops-for-route/", routeID, ".json",
-                          "?key=", apiKey,
-                          "&version=", 2,
-                          sep = "")
-
-            getJsonFromURL(path)$data$entry$polylines
         }
     )
 )
