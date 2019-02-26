@@ -29,11 +29,11 @@ function(input, output, session)
         # Validation
         validated <- TRUE
         
-        
-        
         output$map <- renderLeaflet(
         {
-            leaflet() %>% addTiles()
+            stops <- wrapper$getStopsForRoute("1_100091")
+            
+            leaflet(stops) %>% addTiles() %>% addCircles()
         })
         
         output$summary <- renderUI(

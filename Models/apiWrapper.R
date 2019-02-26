@@ -21,7 +21,7 @@ apiWrapper <- setRefClass(
     methods = list(
 
         #* Returns a list of polylines for a specified route
-        getPolylinesForRoute <- function(routeID)
+        getPolylinesForRoute = function(routeID)
         {
             path <- paste("stops-for-route/", routeID, ".json",
                           "?key=", apiKey,
@@ -33,7 +33,7 @@ apiWrapper <- setRefClass(
 
         #* Returns a list of routes
         # Search radius is optional
-        getRoutesForLocation <- function(lat, lon, radius)
+        getRoutesForLocation = function(lat, lon, radius)
         {
             path <- paste("routes-for-location.json?key=", apiKey,
                           "&lat=", lat,
@@ -53,7 +53,7 @@ apiWrapper <- setRefClass(
 
         #* Returns a list of stops
         # Search radius is optional
-        getStopsForLocation <- function(lat, lon, radius)
+        getStopsForLocation = function(lat, lon, radius)
         {
             path <- paste("stops-for-location.json?key=", apiKey,
                           "&lat=", lat,
@@ -72,7 +72,7 @@ apiWrapper <- setRefClass(
         },
 
         #* Returns a list of stops for a specified route
-        getStopsForRoute <- function(routeID)
+        getStopsForRoute = function(routeID)
         {
             path <- paste("stops-for-route/", routeID, ".json",
                           "?key=", apiKey,
