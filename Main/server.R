@@ -7,7 +7,6 @@ library(googlePolylines)
 source("../Models/transportationApiWrapper.R")
 source("../Models/geocodingApiWrapper.R")
 
-tWrapper <- transportationApiWrapper()
 gWrapper <- geocodingApiWrapper()
 
 function(input, output, session)
@@ -17,9 +16,10 @@ function(input, output, session)
     
     observeEvent(input$routeGoButton,
     {
-        coor <- gWrapper$forwardGeocoding(input$routeLocation)
-        routes <- tWrapper$getRoutesForLocation(coor$lat, coor$lon, 5000, NULL)
-        print(class(routes))
+        tWrapper <- transportationApiWrapper()
+
+        coor <<- gWrapper$forwardGeocoding(input$routeLocation)
+        routes <<- tWrapper$getRoutesForLocation(coor$lat, coor$lon, 5000, NULL)
         
         updateSelectInput(session, inputId = "routeSelectInput",
                           choices = routes$shortName)
@@ -27,15 +27,25 @@ function(input, output, session)
     
     observeEvent(input$routeSelectInput,
     {
+        print(coor)
         if (!is.na(as.numeric(input$routeSelectInput)))
         {
-            routes %>% filter(shortName == input$routeSelectInput)
+            tWrapper <- transportationApiWrapper()
+            
+            print(routes)
+            print(input$routeSelectInput)
+
+            routes <- routes %>% filter(shortName == input$routeSelectInput)
+            
+            print(routes)
             
             routeId <- routes$id
 
+            print(routeId)
+
             stops <- tWrapper$getStopsForRoute(routeId)
 
-            polylines <- select(wrapper$getPolylinesForRoute(routeId), "points")
+            polylines <- select(tWrapper$getPolylinesForRoute(routeId), "points")
 
             polylinesList <- as.list(polylines)
             polylinesList <- polylinesList$points
@@ -53,7 +63,7 @@ function(input, output, session)
             
             output$routeTable <- DT::renderDataTable(
             {
-                DT::datatabke(data = stops)
+                DT::datatable(data = stops)
             })
         }
     })
@@ -65,7 +75,7 @@ function(input, output, session)
         
         output$map <- renderLeaflet(
         {
-            stops <- wrapper$getStopsForRoute("1_100091")
+            stops <- tWrapper$getStopsForRoute("1_100091")
             
             leaflet(stops) %>% addTiles() %>% addCircles()
         })
