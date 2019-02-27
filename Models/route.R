@@ -30,27 +30,15 @@ route <- setRefClass(
                 startingID <- match(startingStop$id, stopsInStartingRoute$id)
                 destinationID <- match(destinationStop$id, stopsInStartingRoute$id)
 
-                stopList <- as.data.frame(stopsInStartingRoute$id)[startingID:destinationID,]
-                result <- list()
-
-                for (i in c(1:length(stopList)))
-                {
-                    result[[i]] <- wrapper$getStop(stopList[[i]])
-                }
+                stopList <- as.data.frame(stopsInStartingRoute)[startingID:destinationID,]
             }
-        },
-        
-        getNearestStops = function(lat, long)
-        {
-            
-        },
-        
-        possibleRoute = function(startingStop, destinationStops)
-        {
-            # start with a list of lists
-            # go through each route of that stop and add it to the list
-            # When one of the destinationStops is reached stop and return the list
-            # of stops used and which routes
-        },
+            else
+            {
+                # Start with a collection
+                # In a loop until the destination id is found, go through each
+                #    stop and split off into the next stop in the route
+                # Save all of these
+            }
+        }
     )
 )

@@ -7,6 +7,7 @@ library(googlePolylines)
 source("../Models/transportationApiWrapper.R")
 source("../Models/geocodingApiWrapper.R")
 
+tWrapper <- transportationApiWrapper()
 gWrapper <- geocodingApiWrapper()
 
 function(input, output, session)
@@ -16,8 +17,6 @@ function(input, output, session)
     
     observeEvent(input$routeGoButton,
     {
-        tWrapper <- transportationApiWrapper()
-
         coor <<- gWrapper$forwardGeocoding(input$routeLocation)
         routes <<- tWrapper$getRoutesForLocation(coor$lat, coor$lon, 5000, NULL)
         
@@ -27,21 +26,13 @@ function(input, output, session)
     
     observeEvent(input$routeSelectInput,
     {
-        print(coor)
         if (!is.na(as.numeric(input$routeSelectInput)))
         {
             tWrapper <- transportationApiWrapper()
-            
-            print(routes)
-            print(input$routeSelectInput)
 
             routes <- routes %>% filter(shortName == input$routeSelectInput)
             
-            print(routes)
-            
             routeId <- routes$id
-
-            print(routeId)
 
             stops <- tWrapper$getStopsForRoute(routeId)
 
