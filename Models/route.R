@@ -1,6 +1,6 @@
-source("Models/apiWrapper.R")
+source("Models/transportationApiWrapper.R")
 
-wrapper <- apiWrapper()
+wrapper <- transportationApiWrapper()
 
 #* A class that is in charge of routes
 route <- setRefClass(
@@ -14,13 +14,30 @@ route <- setRefClass(
             # https://opencagedata.com/api
         },
 
-        # starting & destination are stop classes
+        # starting & destination are stop ids
         # 1_64530 -> 1_81850
         # 1_65150 -> 1_81849
         directionsBetweenRoutes = function(starting, destination)
         {
             # Get the route for that stop and see if the other stop is in that route
-            
+            startingStop <- wrapper$getStop(starting)
+            destinationStop <- wrapper$getStop(destination)
+
+            stopsInStartingRoute <- wrapper$getStopsForRoute(startingStop$routeIds)
+
+            if (destinationStop$id %in% stopsInStartingRoute$id)
+            {
+                startingID <- match(startingStop$id, stopsInStartingRoute$id)
+                destinationID <- match(destinationStop$id, stopsInStartingRoute$id)
+
+                stopList <- as.data.frame(stopsInStartingRoute$id)[startingID:destinationID,]
+                result <- list()
+
+                for (i in c(1:length(stopList)))
+                {
+                    result[[i]] <- wrapper$getStop(stopList[[i]])
+                }
+            }
         },
         
         getNearestStops = function(lat, long)

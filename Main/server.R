@@ -4,26 +4,31 @@ library(DT)
 library(leaflet)
 library(googlePolylines)
 
-source("../Models/apiWrapper.R")
+source("../Models/transportationApiWrapper.R")
 
-wrapper <- apiWrapper()
-
-#* Inputs:
-#  startingPoint (textInput)
-#  destination (textInput)
-#  goButton (actionButton)
-
-#* Outputs:
-#  map (leafletOutput)
-#  summary (htmlOutput)
-#  description (DT::dataTableOutput)
-
-#! Route Class
-#   - Route detection (Lev distance)
-#   - public method that takes 2 addresses and determines the best route between them
+wrapper <- transportationApiWrapper()
 
 function(input, output, session)
 {
+    # Update all the choices for selectInput
+    # routeList <- wrapper$getRoutesForLocation()
+    
+    updateSelectInput(session, inputId = "routeSelectInput",
+                      choices = c("updated"))
+    
+    observeEvent(input$routeSelectInput,
+    {
+        output$routeMap <- renderLeaflet(
+        {
+            
+        })
+
+        output$routeTable <- DT::renderDataTable(
+        {
+
+        })
+    })
+    
     observeEvent(input$goButton,
     {
         # Validation

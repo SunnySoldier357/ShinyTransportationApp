@@ -1,15 +1,42 @@
 library(shiny)
 library(DT)
 library(leaflet)
+library(shinydashboard)
 
-htmlTemplate("template.html",
-    startingPoint = textInput(inputId = "startingPoint",
-                              label = "Starting Location:"),
-    destination = textInput(inputId = "destination",
-                            label = "End Location:"),
-    goButton = actionButton(inputId = "goButton",
-                            label = "Go"),
-    map = leafletOutput(outputId = "map"),
-    summary = htmlOutput(outputId = "summary"),
-    description = DT::dataTableOutput(outputId = "table")
+dashboardPage(
+    dashboardHeader(title = "Seattle Transportation"),
+    dashboardSidebar(
+        sidebarMenu(
+            menuItem("View Nearby Routes", tabName = "viewroutes"),
+            menuItem("Directions", tabName = "directions")
+        )
+    ),
+    dashboardBody(
+        tabItems(
+            tabItem(tabName = "viewroutes",
+                selectInput(inputId = "routeSelectInput",
+                            label = "Select Route:",
+                            choices = c("sdawd")),
+                leafletOutput(outputId = "routeMap"),
+                DT::dataTableOutput(outputId = "routeTable")
+            ),
+            
+            tabItem(tabName = "directions",
+                textInput(inputId = "startingPoint",
+                                          label = "Starting Location:"),
+                
+                textInput(inputId = "destination",
+                                        label = "End Location:"),
+                
+                actionButton(inputId = "goButton",
+                                        label = "Go"),
+                
+                leafletOutput(outputId = "map"),
+                
+                htmlOutput(outputId = "summary"),
+                
+                DT::dataTableOutput(outputId = "table")
+            )
+        )
+    )
 )
