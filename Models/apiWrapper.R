@@ -9,7 +9,7 @@ apiWrapper <- setRefClass(
         #* Gets the JSON file from an API endpoint as a data frame
         getJsonFromUrl = function(path)
         {
-            fromJSON(paste(url, path, sep = ""))
+            fromJSON(paste(url, path, sep = "", collapse = ""))
         }
     )
 )
