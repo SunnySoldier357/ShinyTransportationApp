@@ -1,24 +1,24 @@
-library(httr)
-library(jsonlite)
-
-url <- "http://api.pugetsound.onebusaway.org/api/where/"
-apiKey <- "3347298f-ecf4-45a4-98fe-5aff06696742"
-
-#* Gets JSON file from the URL above appended with the path specified and returns
-#* a JSON object
-getJsonFromURL <- function(path)
-{
-    result <- GET(paste(url, path, sep = "", collapse = ""))
-
-    # Converts from binary to unicode and then to an object based on json structure
-    fromJSON(rawToChar(result$content))
-}
+source("../Models/apiWrapper.R")
 
 #* A class that gets data from the API and return it in lists
 transportationApiWrapper <- setRefClass(
     "transportationApiWrapper",
+    contains = "apiWrapper",
     fields = list(),
     methods = list(
+
+        # Overides the default constructor to provide default values
+        initialize = function(..., url = "http://api.pugetsound.onebusaway.org/api/where/",
+            apiKey = "3347298f-ecf4-45a4-98fe-5aff06696742")
+        {
+            callSuper(..., url = url, apiKey = apiKey)
+        },
+
+        # Overidden Methods
+        # getJsonFromUrl = function(path)
+        # {
+        #     callSuper(path)
+        # },
 
         #* Returns a list of polylines for a specified route
         getPolylinesForRoute = function(routeID)
@@ -28,7 +28,7 @@ transportationApiWrapper <- setRefClass(
                           "&version=", 2,
                           sep = "")
 
-            getJsonFromURL(path)$data$entry$polylines
+            getJsonFromUrl(path)$data$entry$polylines
         },
 
         #* Returns a list of routes
@@ -48,7 +48,7 @@ transportationApiWrapper <- setRefClass(
 
             # TODO: If nothing returns, increase search radius
             
-            getJsonFromURL(path)$data$list
+            getJsonFromUrl(path)$data$list
         },
 
         getStop = function(id)
@@ -58,7 +58,7 @@ transportationApiWrapper <- setRefClass(
                           "?key=", apiKey,
                           sep = "")
 
-            getJsonFromURL(path)$data$entry
+            getJsonFromUrl(path)$data$entry
         },
 
         #* Returns a list of stops
@@ -78,7 +78,7 @@ transportationApiWrapper <- setRefClass(
 
             # TODO: If nothing returns, increase search radius
             
-            getJsonFromURL(path)$data$list
+            getJsonFromUrl(path)$data$list
         },
 
         #* Returns a list of stops for a specified route
@@ -89,7 +89,7 @@ transportationApiWrapper <- setRefClass(
                           "&version=", 2,
                           sep = "")
 
-            getJsonFromURL(path)$data$references$stops
+            getJsonFromUrl(path)$data$references$stops
         }
     )
 )
