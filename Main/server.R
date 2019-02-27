@@ -5,28 +5,57 @@ library(leaflet)
 library(googlePolylines)
 
 source("../Models/transportationApiWrapper.R")
+source("../Models/geocodingApiWrapper.R")
 
-wrapper <- transportationApiWrapper()
+tWrapper <- transportationApiWrapper()
+gWrapper <- geocodingApiWrapper()
 
 function(input, output, session)
 {
-    # Update all the choices for selectInput
-    # routeList <- wrapper$getRoutesForLocation()
+    coor <- NULL
+    routes <- data.frame()
     
-    updateSelectInput(session, inputId = "routeSelectInput",
-                      choices = c("updated"))
+    observeEvent(input$routeGoButton,
+    {
+        coor <- gWrapper$forwardGeocoding(input$routeLocation)
+        routes <- tWrapper$getRoutesForLocation(coor$lat, coor$lon, 5000, NULL)
+        print(class(routes))
+        
+        updateSelectInput(session, inputId = "routeSelectInput",
+                          choices = routes$shortName)
+    })
     
     observeEvent(input$routeSelectInput,
     {
-        output$routeMap <- renderLeaflet(
+        if (!is.na(as.numeric(input$routeSelectInput)))
         {
+            routes %>% filter(shortName == input$routeSelectInput)
             
-        })
+            routeId <- routes$id
 
-        output$routeTable <- DT::renderDataTable(
-        {
+            stops <- tWrapper$getStopsForRoute(routeId)
 
-        })
+            polylines <- select(wrapper$getPolylinesForRoute(routeId), "points")
+
+            polylinesList <- as.list(polylines)
+            polylinesList <- polylinesList$points
+
+            allPolylines <- decode(polylinesList)
+            allPolylines <- bind_rows(allPolylines)
+            
+            output$routeMap <- renderLeaflet(
+            {
+                leaflet(stops) %>%
+                    addCircles() %>%
+                    addTiles() %>%
+                    addPolylines(lat = ~lat, lng = ~lon, data = allPolylines)
+            })
+            
+            output$routeTable <- DT::renderDataTable(
+            {
+                DT::datatabke(data = stops)
+            })
+        }
     })
     
     observeEvent(input$goButton,

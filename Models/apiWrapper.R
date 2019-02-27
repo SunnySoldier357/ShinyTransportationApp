@@ -9,7 +9,7 @@ apiWrapper <- setRefClass(
         #* Gets the JSON file from an API endpoint as a data frame
         getJsonFromUrl = function(path)
         {
-            result <- GET(paste(url, path, sep = "", collapse = ""))
+            result <- GET(paste(url, path, sep = ""))
 
             # Converts from binary to Unicode and then to a data frame based on
             # JSON structure

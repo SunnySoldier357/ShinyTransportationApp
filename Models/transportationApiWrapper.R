@@ -29,17 +29,25 @@ transportationApiWrapper <- setRefClass(
 
         #* Returns a list of routes
         # Search radius is optional
-        getRoutesForLocation = function(lat, lon, radius)
+        getRoutesForLocation = function(lat, lon, radius, query)
         {
             path <- paste("routes-for-location.json?key=", apiKey,
                           "&lat=", lat,
                           "&lon=", lon,
                           sep = "")
+
             if (isTRUE(radius > 0))
             {
-               path <- paste(path,
+                path <- paste(path,
                              "&radius=", radius,
                              sep = "")
+            }
+
+            if (!is.null(query))
+            {
+                path <- paste(path,
+                              "&query=", query,
+                              sep = "")
             }
 
             # TODO: If nothing returns, increase search radius

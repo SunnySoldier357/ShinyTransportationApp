@@ -14,10 +14,18 @@ dashboardPage(
     dashboardBody(
         tabItems(
             tabItem(tabName = "viewroutes",
+                textInput(inputId = "routeLocation",
+                          label = "Enter your city:"),
+                
+                actionButton(inputId = "routeGoButton",
+                             label = "Go"),
+                
                 selectInput(inputId = "routeSelectInput",
                             label = "Select Route:",
-                            choices = c("sdawd")),
+                            choices = c("")),
+                
                 leafletOutput(outputId = "routeMap"),
+                
                 DT::dataTableOutput(outputId = "routeTable")
             ),
             
