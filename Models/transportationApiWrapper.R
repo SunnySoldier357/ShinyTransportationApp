@@ -1,28 +1,24 @@
 source("../Models/apiWrapper.R")
 
-#* A class that gets data from the API and return it in lists
+#* A class that gets data from the transportation API and return it in lists
 transportationApiWrapper <- setRefClass(
     "transportationApiWrapper",
     contains = "apiWrapper",
     fields = list(),
     methods = list(
 
-        # Overides the default constructor to provide default values
+        #* Overrides the default constructor to provide default values
         initialize = function(..., url = "http://api.pugetsound.onebusaway.org/api/where/",
             apiKey = "3347298f-ecf4-45a4-98fe-5aff06696742")
         {
             callSuper(..., url = url, apiKey = apiKey)
         },
 
-        # Overidden Methods
-        # getJsonFromUrl = function(path)
-        # {
-        #     callSuper(path)
-        # },
-
         #* Returns a list of polylines for a specified route
         getPolylinesForRoute = function(routeID)
         {
+            # TODO: Exception handling
+            
             path <- paste("stops-for-route/", routeID, ".json",
                           "?key=", apiKey,
                           "&version=", 2,
@@ -51,6 +47,7 @@ transportationApiWrapper <- setRefClass(
             getJsonFromUrl(path)$data$list
         },
 
+        #* Returns the stop corresponding to the given id
         getStop = function(id)
         {
             path <- paste("stop/",
