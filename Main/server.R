@@ -3,6 +3,7 @@ library(dplyr)
 library(DT)
 library(leaflet)
 library(googlePolylines)
+library(stringr)
 
 source("../Models/transportationApiWrapper.R")
 source("../Models/geocodingApiWrapper.R")
@@ -21,21 +22,23 @@ function(input, output, session)
         routes <<- tWrapper$getRoutesForLocation(coor$lat, coor$lon, 5000, NULL)
         
         updateSelectInput(session, inputId = "routeSelectInput",
-                          choices = routes$shortName)
+                          choices = paste(routes$shortName, ": ", routes$description, sep = ""))
     })
     
     observeEvent(input$routeSelectInput,
     {
-        if (!is.na(as.numeric(input$routeSelectInput)))
+        if (input$routeSelectInput != "")
         {
             tWrapper <- transportationApiWrapper()
 
-            routes <- routes %>% filter(shortName == input$routeSelectInput)
+            routes <- routes %>% filter(
+                shortName == substr(input$routeSelectInput, 1,
+                    str_locate(input$routeSelectInput, "[:]") - 1))
             
             routeId <- routes$id
 
             stops <- tWrapper$getStopsForRoute(routeId)
-
+            
             polylines <- select(tWrapper$getPolylinesForRoute(routeId), "points")
 
             polylinesList <- as.list(polylines)
@@ -54,7 +57,8 @@ function(input, output, session)
             
             output$routeTable <- DT::renderDataTable(
             {
-                DT::datatable(data = stops)
+                DT::datatable(data = select(stops, code, direction, name))
+                
             })
         }
     })
