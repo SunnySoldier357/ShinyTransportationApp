@@ -1,18 +1,20 @@
-library(shiny)
 library(dplyr)
 library(DT)
-library(leaflet)
 library(googlePolylines)
+library(leaflet)
+library(shiny)
 library(stringr)
 
-source("../Models/transportationApiWrapper.R")
 source("../Models/geocodingApiWrapper.R")
+source("../Models/route.R")
+source("../Models/transportationApiWrapper.R")
 
 tWrapper <- transportationApiWrapper()
 gWrapper <- geocodingApiWrapper()
 
 function(input, output, session)
 {
+    #* View Routes Page
     coor <- NULL
     routes <- data.frame()
     
@@ -62,17 +64,20 @@ function(input, output, session)
             })
         }
     })
-    
+
+    #* Directions Page
     observeEvent(input$goButton,
     {
-        # Validation
-        validated <- TRUE
-        
+        directions <- route$new()
+
         output$map <- renderLeaflet(
         {
-            stops <- tWrapper$getStopsForRoute("1_100091")
+            stops <- directions$directionsBetweenRoutes("1_64530", "1_81850")
             
-            leaflet(stops) %>% addTiles() %>% addCircles()
+            leaflet(stops) %>% 
+                addTiles() %>% 
+                addCircles() %>% 
+                addPolylines(lat = ~lat, lng = ~lon, data = stops)
         })
         
         output$summary <- renderUI(

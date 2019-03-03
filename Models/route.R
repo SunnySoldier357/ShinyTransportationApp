@@ -1,4 +1,4 @@
-source("Models/transportationApiWrapper.R")
+source("../Models/transportationApiWrapper.R")
 
 wrapper <- transportationApiWrapper()
 
@@ -7,12 +7,6 @@ route <- setRefClass(
     "route",
     fields = list(),
     methods = list(
-
-        # TODO: Doc
-        addressToCoordinates = function(address)
-        {
-            # https://opencagedata.com/api
-        },
 
         # starting & destination are stop ids
         # 1_64530 -> 1_81850

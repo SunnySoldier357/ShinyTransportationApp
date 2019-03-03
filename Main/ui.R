@@ -1,6 +1,6 @@
-library(shiny)
 library(DT)
 library(leaflet)
+library(shiny)
 library(shinydashboard)
 
 dashboardPage(
@@ -31,13 +31,13 @@ dashboardPage(
             
             tabItem(tabName = "directions",
                 textInput(inputId = "startingPoint",
-                                          label = "Starting Location:"),
+                          label = "Starting Address:"),
                 
                 textInput(inputId = "destination",
-                                        label = "End Location:"),
+                          label = "Destination Address:"),
                 
                 actionButton(inputId = "goButton",
-                                        label = "Go"),
+                             label = "Go"),
                 
                 leafletOutput(outputId = "map"),
                 
