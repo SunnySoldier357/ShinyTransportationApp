@@ -17,6 +17,8 @@ dashboardPage(
                 textInput(inputId = "routeLocation",
                           label = "Enter your city:"),
                 
+                textOutput(outputId = "routeLocationError"),
+                
                 actionButton(inputId = "routeGoButton",
                              label = "Go"),
                 

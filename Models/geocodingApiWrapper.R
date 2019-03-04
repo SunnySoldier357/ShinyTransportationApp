@@ -27,7 +27,15 @@ geocodingApiWrapper <- setRefClass(
 
             data <- getJsonFromUrl(path)$results$geometry
 
-            coordinate$new(lat = data$lat, lon = data$lng)
+            if (length(data) == 0)
+            {
+                # Return NULL
+                NULL
+            }
+            else
+            {
+               coordinate$new(lat = data$lat, lon = data$lng)
+            }
         }
     )
 )

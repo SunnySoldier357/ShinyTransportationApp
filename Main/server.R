@@ -21,10 +21,26 @@ function(input, output, session)
     observeEvent(input$routeGoButton,
     {
         coor <<- gWrapper$forwardGeocoding(input$routeLocation)
-        routes <<- tWrapper$getRoutesForLocation(coor$lat, coor$lon, 5000, NULL)
+
+        if (length(coor) != 0)
+        {
+            routes <<- tWrapper$getRoutesForLocation(coor$lat, coor$lon, 5000, NULL)
         
-        updateSelectInput(session, inputId = "routeSelectInput",
-                          choices = paste(routes$shortName, ": ", routes$description, sep = ""))
+            updateSelectInput(session, inputId = "routeSelectInput",
+                              choices = paste(routes$shortName, ": ", routes$description, sep = ""))
+            
+            output$routeLocationError <- renderText(
+            {
+                ""
+            })
+        }
+        else
+        {
+            output$routeLocationError <- renderText(
+            {
+                "The location you entered resulted in an error. Ensure that the locating entered is right."
+            })
+        }
     })
     
     observeEvent(input$routeSelectInput,
@@ -74,9 +90,9 @@ function(input, output, session)
         {
             stops <- directions$directionsBetweenRoutes("1_64530", "1_81850")
             
-            leaflet(stops) %>% 
-                addTiles() %>% 
-                addCircles() %>% 
+            leaflet(stops) %>%
+                addTiles() %>%
+                addCircles() %>%
                 addPolylines(lat = ~lat, lng = ~lon, data = stops)
         })
         
