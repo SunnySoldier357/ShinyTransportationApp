@@ -17,10 +17,14 @@ route <- setRefClass(
             startingStop <- wrapper$getStop(starting)
             destinationStop <- wrapper$getStop(destination)
 
+            # Loop over starting stops's route ids
+
             stopsInStartingRoute <- wrapper$getStopsForRoute(startingStop$routeIds)
 
             if (destinationStop$id %in% stopsInStartingRoute$id)
             {
+                stopsList <- wrapper$getStopsForDirections()
+                
                 startingID <- match(startingStop$id, stopsInStartingRoute$id)
                 destinationID <- match(destinationStop$id, stopsInStartingRoute$id)
 

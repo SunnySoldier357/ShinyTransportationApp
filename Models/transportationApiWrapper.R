@@ -17,8 +17,6 @@ transportationApiWrapper <- setRefClass(
         #* Returns a list of polylines for a specified route
         getPolylinesForRoute = function(routeID)
         {
-            # TODO: Exception handling
-            
             path <- paste("stops-for-route/", routeID, ".json",
                           "?key=", apiKey,
                           "&version=", 2,
@@ -64,6 +62,39 @@ transportationApiWrapper <- setRefClass(
                           sep = "")
 
             getJsonFromUrl(path)$data$entry
+        },
+        
+        getStopsForDirections = function(routeID)
+        {
+            path <- paste("stops-for-route/", routeID, ".json",
+                          "?key=", apiKey,
+                          "&version=", 2,
+                          sep = "")
+            
+            stops <- getJsonFromUrl(path)$data$references$stops
+            rightStops <- (getJsonFromUrl(path)$data$entry$stopGroupings$stopGroups[[1]])[1:1,]$stopIds[[1]]
+            
+            test <- data.frame("code" = "6441",
+                               "direction" = "S",
+                               "id" = "1_231231",
+                               "lat" = 47.5,
+                               "lon" = 122.1,
+                               "name" = "12th Ave", stringsAsFactors = FALSE)
+            
+            for (i in c(1:length(rightStops)))
+            {
+                stop <- stops %>% filter(id == rightStops[i])
+                entry <- list(stop$code, stop$direction, stop$id, stop$lat, stop$lon, stop$name)
+                
+                if (i == 1)
+                {
+                    test[1,] = entry
+                }
+                else
+                {
+                    test[nrow(test) + 1,] = entry
+                }
+            }
         },
 
         #* Returns a list of stops
