@@ -45,7 +45,7 @@ dashboardPage(
                 
                 leafletOutput(outputId = "map"),
                 
-                textOutput(outputId = "summary"),
+                htmlOutput(outputId = "summary"),
                 
                 DT::dataTableOutput(outputId = "table")
             )

@@ -95,6 +95,8 @@ transportationApiWrapper <- setRefClass(
                     test[nrow(test) + 1,] = entry
                 }
             }
+
+            test
         },
 
         #* Returns a list of stops

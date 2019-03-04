@@ -83,18 +83,21 @@ function(input, output, session)
     {
         directions <- route$new()
         
-        coor <<- gWrapper$forwardGeocoding(input$startingPoint)
-        coor2 <<- gWrapper$forwardGeocoding(input$destination)
+        # coor <<- gWrapper$forwardGeocoding(input$startingPoint)
+        # coor2 <<- gWrapper$forwardGeocoding(input$destination)
+        
+        coor <- "sdawdaw"
+        coor2 <- "awasdawd"
         
         if (length(coor) != 0 && length(coor2) != 0)
         {
-            startingStop <- tWrapper$getStopsForLocation(coor$lat, coor$lon, 5000)
-            destinationStop <- tWrapper$getStopsForLocation(coor2$lat, coor2$lon, 5000)
+            # startingStop <- tWrapper$getStopsForLocation(coor$lat, coor$lon, 100)$id
+            # destinationStop <- tWrapper$getStopsForLocation(coor2$lat, coor2$lon, 100)$id
+            
+            startingStop <- "1_64530"
+            destinationStop <- "1_81841"
 
-            # Get the first stop for the location and the id associated with it
-
-            stops <- directions$directionsBetweenRoutes("1_64530", "1_64549")
-            print(class(stops))
+            stops <- directions$directionsBetweenRoutes(startingStop, destinationStop)
 
             output$map <- renderLeaflet(
             {
@@ -104,9 +107,13 @@ function(input, output, session)
                     addPolylines(lat = ~lat, lng = ~lon, data = stops)
             })
             
-            output$summary <- renderText(
+            output$summary <- renderUI(
             {
-                paste("Number of stops:", nrow(stops))
+                text <- paste("Number of stops:", nrow(stops), "\n")
+                text1 <- paste("Starting Stop: ", stops[1:1,]$name, "\n", sep = "")
+                text2 <- paste("Destination Stop: ", stops[nrow(stops):nrow(stops),]$name, "\n", sep = "")
+                
+                HTML(paste(text, text1, text2, sep = "<br/>"))
             })
             
             output$table <- DT::renderDataTable(
