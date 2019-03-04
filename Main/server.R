@@ -47,8 +47,6 @@ function(input, output, session)
     {
         if (input$routeSelectInput != "")
         {
-            tWrapper <- transportationApiWrapper()
-
             routes <- routes %>% filter(
                 shortName == substr(input$routeSelectInput, 1,
                     str_locate(input$routeSelectInput, "[:]") - 1))
@@ -68,7 +66,7 @@ function(input, output, session)
             output$routeMap <- renderLeaflet(
             {
                 leaflet(stops) %>%
-                    addCircles() %>%
+                    addMarkers(label = ~code, popup = ~name) %>%
                     addTiles() %>%
                     addPolylines(lat = ~lat, lng = ~lon, data = allPolylines)
             })
@@ -76,7 +74,6 @@ function(input, output, session)
             output$routeTable <- DT::renderDataTable(
             {
                 DT::datatable(data = select(stops, code, direction, name))
-                
             })
         }
     })
@@ -85,25 +82,49 @@ function(input, output, session)
     observeEvent(input$goButton,
     {
         directions <- route$new()
+        
+        coor <<- gWrapper$forwardGeocoding(input$startingPoint)
+        coor2 <<- gWrapper$forwardGeocoding(input$destination)
+        
+        if (length(coor) != 0 && length(coor2) != 0)
+        {
+            startingStop <- tWrapper$getStopsForLocation(coor$lat, coor$lon, 5000)
+            destinationStop <- tWrapper$getStopsForLocation(coor2$lat, coor2$lon, 5000)
 
-        output$map <- renderLeaflet(
-        {
-            stops <- directions$directionsBetweenRoutes("1_64530", "1_81850")
+            # Get the first stop for the location and the id associated with it
+
+            stops <- directions$directionsBetweenRoutes("1_64530", "1_64549")
+            print(class(stops))
+
+            output$map <- renderLeaflet(
+            {
+                leaflet(stops) %>%
+                    addTiles() %>%
+                    addMarkers(label = ~code, popup = ~name) %>%
+                    addPolylines(lat = ~lat, lng = ~lon, data = stops)
+            })
             
-            leaflet(stops) %>%
-                addTiles() %>%
-                addCircles() %>%
-                addPolylines(lat = ~lat, lng = ~lon, data = stops)
-        })
-        
-        output$summary <- renderUI(
-        {
+            output$summary <- renderText(
+            {
+                paste("Number of stops:", nrow(stops))
+            })
             
-        })
-        
-        output$table <- DT::renderDataTable(
-        {
+            output$table <- DT::renderDataTable(
+            {
+                DT::datatable(data = select(stops, code, direction, name))
+            })
             
-        })
+            output$locationError <- renderText(
+            {
+                ""
+            })
+        }
+        else
+        {
+            output$locationError <- renderText(
+            {
+                "The location you entered resulted in an error. Ensure that the locating entered is right."
+            })
+        }
     })
 }

@@ -38,12 +38,14 @@ dashboardPage(
                 textInput(inputId = "destination",
                           label = "Destination Address:"),
                 
+                textOutput(outputId = "locationError"),
+                
                 actionButton(inputId = "goButton",
                              label = "Go"),
                 
                 leafletOutput(outputId = "map"),
                 
-                htmlOutput(outputId = "summary"),
+                textOutput(outputId = "summary"),
                 
                 DT::dataTableOutput(outputId = "table")
             )

@@ -9,7 +9,7 @@ route <- setRefClass(
     methods = list(
 
         # starting & destination are stop ids
-        # 1_64530 -> 1_81850
+        # 1_64530 -> 1_64549
         # 1_65150 -> 1_81849
         directionsBetweenRoutes = function(starting, destination)
         {
