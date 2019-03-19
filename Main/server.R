@@ -83,19 +83,13 @@ function(input, output, session)
     {
         directions <- route$new()
         
-        # coor <<- gWrapper$forwardGeocoding(input$startingPoint)
-        # coor2 <<- gWrapper$forwardGeocoding(input$destination)
-        
-        coor <- "sdawdaw"
-        coor2 <- "awasdawd"
+        coor <<- gWrapper$forwardGeocoding(input$startingPoint)
+        coor2 <<- gWrapper$forwardGeocoding(input$destination)
         
         if (length(coor) != 0 && length(coor2) != 0)
         {
-            # startingStop <- tWrapper$getStopsForLocation(coor$lat, coor$lon, 100)$id
-            # destinationStop <- tWrapper$getStopsForLocation(coor2$lat, coor2$lon, 100)$id
-            
-            startingStop <- "1_64530"
-            destinationStop <- "1_81841"
+            startingStop <- tWrapper$getStopsForLocation(coor$lat, coor$lon, 100)$id
+            destinationStop <- tWrapper$getStopsForLocation(coor2$lat, coor2$lon, 100)$id
 
             stops <- directions$directionsBetweenRoutes(startingStop, destinationStop)
 
