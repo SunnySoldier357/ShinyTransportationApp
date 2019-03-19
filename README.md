@@ -54,3 +54,5 @@ locations.
 - `shiny`
 - `shinydashboard`
 - `stringr`
+
+##### *This application was developed for my IB Computer Science HL Internal Assessment.*
